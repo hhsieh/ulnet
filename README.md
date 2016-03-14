@@ -1,2 +1,2 @@
 # ulnet
-Generating an unlimited number of network based on distance threshold
+Generate an unlimited numbers of networks based on threshold distance.
