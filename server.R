@@ -17,13 +17,17 @@ library(igraph)
 data <- getURL("https://docs.google.com/spreadsheets/d/181m8T_QFkUR2nuXk0fEGNcgayA-oFaU6y38TQtgpOT8/pub?output=csv")
 data <- read.csv(textConnection(data))
 
+
+
 #####################################################
 ##                                                 ##
 ##   Step 3 Generate the distance matrix of nodes  ##
 ##                                                 ##
 #####################################################
+
 nests_xy <- matrix(cbind(data$Xplot,data$Yplot),ncol=2) 
 dist <- as.matrix(dist(nests_xy))
+
 
 #############################################################################################
 ##                                                                                         ##
@@ -32,27 +36,31 @@ dist <- as.matrix(dist(nests_xy))
 #############################################################################################
 modiinfo <- function(d) {
   DM <- matrix(0, nrow = nrow(dist), ncol = ncol(dist))
+  
+  #based on user-defined threshold distance, d, to create an adjancency matrix of nodes
   DM <- dist[] < d
   diag(DM) = 0
   I <- diag(1, nrow=nrow(dist), ncol=ncol(dist))
+  
+  #the application of the fundamental matrix of Markov Chain to generate information of comparments
   D <- matrix(0, nrow=nrow(dist), ncol = ncol(dist))
   D <- sapply(1:nrow(dist), function(z) DM[,z]/(z+1))
   inv <- solve(I-D)
   
-  identity <- function(x) data$Tag[x]
-  x_cord <- function(x) data$Xplot[x]
-  y_cord <- function(x) data$Yplot[x]
-  cmtsize <- function(x) length(which(inv[,x]!=0))
-  comp <- function(x) which(inv[,x]!=0)[1]
-  
-  g <- graph.adjacency(DM)
-  between <- function(x) betweenness(g, directed=FALSE)[x]
-  close <- function(x) closeness(g, mode = "out")[x]
-  degree_centrality <- function(x) length(which(DM[,x]==1))
-  scale <- function(x) data$scale_incidence[x]
-  predator <- function(x) data$beetle_incidence[x]
-  fungus <- function(x) data$fungus_incidence[x]
-  tree <- function(x) data$especie[x]
+  # collect node properties of the network
+  identity <- function(x) data$Tag[x] #node identities
+  x_cord <- function(x) data$Xplot[x] #x-coordinates of nodes
+  y_cord <- function(x) data$Yplot[x] #y-coordinates of nodes
+  cmtsize <- function(x) length(which(inv[,x]!=0)) #compartment sizes of nodes
+  comp <- function(x) which(inv[,x]!=0)[1] #compartment identities
+  g <- graph.adjacency(DM) #generate a graph
+  between <- function(x) betweenness(g, directed=FALSE)[x] #betweenness centralities of nodes
+  close <- function(x) closeness(g, mode = "out")[x] #closeness centralities of nodes
+  degree_centrality <- function(x) length(which(DM[,x]==1)) #degree centralities of nodes
+  scale <- function(x) data$scale_incidence[x] #the presence/absence of the protection mutualism
+  predator <- function(x) data$beetle_incidence[x] #the presence/absence of predation
+  fungus <- function(x) data$fungus_incidence[x] #the presence of disease
+  tree <- function(x) data$especie[x] #tree species of concerned sites
   
   node_prop <- list()
   N <- nrow(dist)
@@ -63,10 +71,8 @@ modiinfo <- function(d) {
                                 ) 
   }
   nodeproperties <- do.call(rbind, node_prop)
-  #return(nodeproperties)
 
-
-  
+  # based on user-defined threshold distance, remove nodes in comparmtnets of which distance to any of the plot margins < d
   p1 <- nodeproperties$compartment_id[which((-300+d) < nodeproperties$x_cord & nodeproperties$x_cord < d & 100 < nodeproperties$y_cord & nodeproperties$y_cord< 100+d)] 
   p2 <- nodeproperties$compartment_id[which(nodeproperties$y_cord > 600-d)]
   p3 <- nodeproperties$compartment_id[which(nodeproperties$y_cord < d)]
@@ -79,27 +85,20 @@ modiinfo <- function(d) {
   unidt4 <- unique(p4)
   unidt5 <- unique(p5)
   unidt <- unique(c(unidt1, unidt2, unidt3, unidt4, unidt5))
-  #return(unidt)
   
-  library(Hmisc) #import Hmisc for dropping rows to be deleted due to compartments
-  filtered_nodes <- subset(nodeproperties, compartment_id %nin% unidt) # delete rows
-  #return(filtered_nodes)  #these three lines work
+  library(Hmisc) #import Hmisc for dropping rows to be deleted due to the threshold distance
+  filtered_nodes <- subset(nodeproperties, compartment_id %nin% unidt)
   
-  ##now extract needed points, create edges and make a plot
+  # produce an edge table
   edg_from <- function(x) replicate(length(which(DM[,x]!=0)),x)
   edg_to <- function(x) which(DM[,x]!=0)
   X_cord_from <- function(x) replicate(length(edg_from(x)), data$Xplot[x])
   Y_cord_from <- function(x) replicate(length(edg_from(x)), data$Yplot[x])
   X_cord_to <- function(x) data$Xplot[which(DM[,x]!=0)]
   Y_cord_to <- function(x) data$Yplot[which(DM[,x]!=0)]
-  #tt <- function(x) length(which(inv[,x]!=0))
-  #cmtz <- sapply(1:nrow(dist), tt) # compartment size
   zz <- function(x) which(inv[,x]!=0)[1]
   comp <- sapply(1:nrow(dist), zz)
   compar <- function(x) replicate(length(which(DM[,x]!=0)), comp[x])
-  
-  #cmp <- replicate(length(which(inv[,x]!=0)), which(inv[,x]!=0)[1])
-  #compar <- sapply(x = 1:nrow(dist), cmp)
   
   edg_f <- list()
   N <- nrow(dist)
@@ -114,18 +113,18 @@ modiinfo <- function(d) {
   
   networkstats <- unique(filtered_nodes[,c(4,5)])
   compsize <- networkstats$comp_size
-  #return(networkstats)
 
   return(list(nodes = filtered_nodes, edges = filtered_edges, compsize = compsize))
 
 }
 
+
 ############################################
 ##                                        ##
 ##   Interactive visualization on shiny   ##
+##       (needs to work with ui.R)        ##
 ##                                        ##
 ############################################
-
 shinyServer(function(input, output, session) {
   
   data1 <- function() {
