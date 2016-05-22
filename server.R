@@ -1,19 +1,35 @@
+
+##########################################
+##                                      ##
+##   Step 1 Import required packages    ##
+##                                      ##
+##########################################
 library(shiny)
 library(ggplot2)
-library(plotly)
+library(RCurl)
+library(igraph)
 
-myCsv <- read.csv("/Users/achimnyswallow/Documents/Shiny/Azteca_incidence_s06_Shiny.csv")
+###############################
+##                           ##
+##   Step 2 Read in data     ##
+##                           ##
+###############################
+data <- getURL("https://docs.google.com/spreadsheets/d/181m8T_QFkUR2nuXk0fEGNcgayA-oFaU6y38TQtgpOT8/pub?output=csv")
+data <- read.csv(textConnection(data))
 
-scale <- subset(myCsv, scale_incidence == "1")
-nest <- myCsv$Tag
-
-nests_xy <- matrix(cbind(myCsv$Xplot,myCsv$Yplot),ncol=2)
+#####################################################
+##                                                 ##
+##   Step 3 Generate the distance matrix of nodes  ##
+##                                                 ##
+#####################################################
+nests_xy <- matrix(cbind(data$Xplot,data$Yplot),ncol=2) 
 dist <- as.matrix(dist(nests_xy))
 
-## create a matrix that contains nest to nest distance value
-dist <- as.matrix(dist(nests_xy))  ## dist is a function that calculates the distance of every two trees
-diag(dist) <- 0  ## diagnol of the distance matrix is 0 - because self-to-self equals to 0
-
+#############################################################################################
+##                                                                                         ##
+##   Step4 Generate edge lists and node lists based on user-defined threshold distance     ##
+##                                                                                         ##
+#############################################################################################
 modiinfo <- function(d) {
   DM <- matrix(0, nrow = nrow(dist), ncol = ncol(dist))
   DM <- dist[] < d
@@ -23,107 +39,96 @@ modiinfo <- function(d) {
   D <- sapply(1:nrow(dist), function(z) DM[,z]/(z+1))
   inv <- solve(I-D)
   
-  library(igraph)
-  identity <- function(x) myCsv$Tag[x]
-  x_cord <- function(x) myCsv$Xplot[x]
-  y_cord <- function(x) myCsv$Yplot[x]
+  identity <- function(x) data$Tag[x]
+  x_cord <- function(x) data$Xplot[x]
+  y_cord <- function(x) data$Yplot[x]
   cmtsize <- function(x) length(which(inv[,x]!=0))
   comp <- function(x) which(inv[,x]!=0)[1]
+  
   g <- graph.adjacency(DM)
   between <- function(x) betweenness(g, directed=FALSE)[x]
   close <- function(x) closeness(g, mode = "out")[x]
   degree_centrality <- function(x) length(which(DM[,x]==1))
-  scale <- function(x) myCsv$scale_incidence[x]
-  predator <- function(x) myCsv$beetle_incidence[x]
-  fungus <- function(x) myCsv$fungus_incidence[x]
-  tree <- function(x) myCsv$especie[x]
-  
-  
+  scale <- function(x) data$scale_incidence[x]
+  predator <- function(x) data$beetle_incidence[x]
+  fungus <- function(x) data$fungus_incidence[x]
+  tree <- function(x) data$especie[x]
   
   node_prop <- list()
   N <- nrow(dist)
   for (i in 1:N) {
-    node_prop[[i]] = data.frame(identity = identity(i), compartment = comp(i), cmtsize = cmtsize(i), x_cord = x_cord(i), y_cord = y_cord(i), compartment_size = cmtsize(i), betweenness_centrality = between(i), closeness_centrality = close(i), degree_centrality = degree_centrality(i), mutualism = scale(i), predator = predator(i), fungus = fungus(i), tree_species = tree(i)) 
+    node_prop[[i]] = data.frame(node_identity = identity(i), x_cord = x_cord(i), y_cord = y_cord(i), compartment_id = comp(i), comp_size = cmtsize(i),
+                                between_ct = between(i), close_ct = close(i), degree_ct = degree_centrality(i),
+                                mutualism = scale(i), predation = predator(i), disease = fungus(i), tree_spp = tree(i)
+                                ) 
   }
-  
   nodeproperties <- do.call(rbind, node_prop)
   #return(nodeproperties)
-  ## delete nodes within distance threshold and clusters they belong to 
-  #return(nodeproperties$compartment)
+
+
   
-  dtcompartments <- nodeproperties$compartment[which(nodeproperties$x_cord < d)] ## this is a test that needs to be deleted later
-  unidt <- unique(dtcompartments)
-  #return(unidt)
-  
-  p1 <- nodeproperties$compartment[which(nodeproperties$x_cord < 0 & nodeproperties$y_cord < 100+d)] 
-  p2 <- nodeproperties$compartment[which(nodeproperties$y_cord > 600-d)]
-  p3 <- nodeproperties$compartment[which(nodeproperties$y_cord < d)]
-  p4 <- nodeproperties$compartment[which(nodeproperties$x_cord < -300+d)]
-  p5 <- nodeproperties$compartment[which(nodeproperties$x_cord >  500-d)]
-  p6 <- nodeproperties$compartment[which(nodeproperties$x_cord < d & nodeproperties$y_cord < 100)]
-  
-  special <- subset(nodeproperties, nodeproperties$x_cord > 0 & nodeproperties$x_cord < d & nodeproperties$y_cord > 100 & nodeproperties$y_cord < 100+d)
-  
-  #special_dist <- sqrt((special$x_cord - 0)^2 + (special$y_cord - 100)^2)
-  #return(special_dist)
-  
-  p7 <- nodeproperties$compartment[which(sqrt((special$x_cord - 0)^2 + (special$y_cord - 100)^2) < d)]
-  
+  p1 <- nodeproperties$compartment_id[which((-300+d) < nodeproperties$x_cord & nodeproperties$x_cord < d & 100 < nodeproperties$y_cord & nodeproperties$y_cord< 100+d)] 
+  p2 <- nodeproperties$compartment_id[which(nodeproperties$y_cord > 600-d)]
+  p3 <- nodeproperties$compartment_id[which(nodeproperties$y_cord < d)]
+  p4 <- nodeproperties$compartment_id[which(nodeproperties$x_cord < -300+d)]
+  p5 <- nodeproperties$compartment_id[which(nodeproperties$x_cord >  500-d)]
+
   unidt1 <- unique(p1) 
   unidt2 <- unique(p2)
   unidt3 <- unique(p3)
   unidt4 <- unique(p4)
   unidt5 <- unique(p5)
-  unidt6 <- unique(p6)
-  unidt7 <- unique(p7)
-  
-  unidt <- unique(c(unidt1, unidt2, unidt3, unidt4, unidt5, unidt6, unidt7))
+  unidt <- unique(c(unidt1, unidt2, unidt3, unidt4, unidt5))
   #return(unidt)
   
   library(Hmisc) #import Hmisc for dropping rows to be deleted due to compartments
-  filtered <- subset(nodeproperties, compartment %nin% unidt) # delete rows
-  #return(filtered) ## these three lines work
+  filtered_nodes <- subset(nodeproperties, compartment_id %nin% unidt) # delete rows
+  #return(filtered_nodes)  #these three lines work
   
   ##now extract needed points, create edges and make a plot
   edg_from <- function(x) replicate(length(which(DM[,x]!=0)),x)
   edg_to <- function(x) which(DM[,x]!=0)
-  X_cord_from <- function(x) replicate(length(edg_from(x)), myCsv$Xplot[x])
-  Y_cord_from <- function(x) replicate(length(edg_from(x)), myCsv$Yplot[x])
-  X_cord_to <- function(x) myCsv$Xplot[which(DM[,x]!=0)]
-  Y_cord_to <- function(x) myCsv$Yplot[which(DM[,x]!=0)]
+  X_cord_from <- function(x) replicate(length(edg_from(x)), data$Xplot[x])
+  Y_cord_from <- function(x) replicate(length(edg_from(x)), data$Yplot[x])
+  X_cord_to <- function(x) data$Xplot[which(DM[,x]!=0)]
+  Y_cord_to <- function(x) data$Yplot[which(DM[,x]!=0)]
+  #tt <- function(x) length(which(inv[,x]!=0))
+  #cmtz <- sapply(1:nrow(dist), tt) # compartment size
+  zz <- function(x) which(inv[,x]!=0)[1]
+  comp <- sapply(1:nrow(dist), zz)
+  compar <- function(x) replicate(length(which(DM[,x]!=0)), comp[x])
+  
+  #cmp <- replicate(length(which(inv[,x]!=0)), which(inv[,x]!=0)[1])
+  #compar <- sapply(x = 1:nrow(dist), cmp)
   
   edg_f <- list()
   N <- nrow(dist)
   for (i in 1:N) {
-    edg_f[[i]] = data.frame(edg_from = edg_from(i), edg_to = edg_to(i), X_cord_from = X_cord_from(i), Y_cord_from = Y_cord_from(i), X_cord_to = X_cord_to(i), Y_cord_to = Y_cord_to(i)) 
+    edg_f[[i]] = data.frame(edge_from = edg_from(i), edge_to = edg_to(i), X_cord_from = X_cord_from(i), Y_cord_from = Y_cord_from(i), X_cord_to = X_cord_to(i), Y_cord_to = Y_cord_to(i), compartment_id = compar(i)) 
   }
   
   edges <- do.call(rbind, edg_f)
+  filtered_edges <- subset(edges, compartment_id %nin% unidt) 
+  filtered_edges <- filtered_edges[,c(1:6)]
+  #return(filtered_edges)
   
-  label <- c(1:nrow(dist))
-  id <- c(1:nrow(dist))
-  
-  tt <- function(x) length(which(inv[,x]!=0))
-  cmtsize <- sapply(1:nrow(dist), tt)
-  zz <- function(x) which(inv[,x]!=0)[1]
-  comp <- sapply(1:nrow(dist), zz)
-  
-  vertices <- data.frame(id, label, comp, cmtsize)
-  
-  df <- list(edges = edges, vertices = vertices)
-  
-  dfnet <- merge(df$edges, df$vertices, by.x = "edg_from", by.y = "label", all = TRUE)
-  dfnet <- dfnet[complete.cases(dfnet),]
-  
-  filtered_l <- subset(dfnet, comp %nin% unidt) 
-  
-  return(filtered_l)
+  networkstats <- unique(filtered_nodes[,c(4,5)])
+  compsize <- networkstats$comp_size
+  #return(networkstats)
+
+  return(list(nodes = filtered_nodes, edges = filtered_edges, compsize = compsize))
+
 }
 
+############################################
+##                                        ##
+##   Interactive visualization on shiny   ##
+##                                        ##
+############################################
 
 shinyServer(function(input, output, session) {
   
-  data <- function() {
+  data1 <- function() {
     modiinfo(as.numeric(input$thresh))
   }
   
@@ -131,18 +136,25 @@ shinyServer(function(input, output, session) {
     modiinfo(input$thresh)
   })
 
+  output$table1 <- renderTable({
+    data1()[[2]]
+  })
+  
+  output$table2 <- renderTable({
+    data1()[[1]]
+  })
+  
   output$plot1 <- renderPlot({
     
-    p <- ggplot(data()) + geom_point(aes(x=X_cord_from, y = Y_cord_from))  + scale_x_continuous(limits = c(-300, 500)) + scale_y_continuous(limits = c(0, 600)) + labs(x = "X-cordinate (m)", y = "Y-cordinate (m)")
-    q <- p + geom_segment(data=data(), aes(x = X_cord_from, y = Y_cord_from, xend = X_cord_to, yend = Y_cord_to), color="pink", alpha = 0.3)  
+    p <- ggplot(data1()[[2]]) + geom_point(aes(x=X_cord_from, y = Y_cord_from))  + scale_x_continuous(limits = c(-300, 500)) + scale_y_continuous(limits = c(0, 600)) + labs(x = "X-coordinate (m)", y = "Y-coordinate (m)")
+    q <- p + geom_segment(data=data1()[[2]], aes(x = X_cord_from, y = Y_cord_from, xend = X_cord_to, yend = Y_cord_to), color="pink", alpha = 0.8)  
     q
     })
     
   ranges2 <- reactiveValues(x = NULL, y = NULL)
   
   output$plot2 <- renderPlot({
-    ggplot(data(), aes(x = X_cord_from, y = Y_cord_from)) + geom_point() + geom_segment(data=data(), aes(x = X_cord_from, y = Y_cord_from, xend = X_cord_to, yend = Y_cord_to), color="pink", alpha = 0.8)  + coord_cartesian(xlim = ranges2$x, ylim = ranges2$y) + labs(x = "X-cordinate (m)", y = "Y-cordinate (m)")
-    
+    ggplot(data1()[[2]], aes(x = X_cord_from, y = Y_cord_from)) + geom_point() + geom_segment(data=data1()[[2]], aes(x = X_cord_from, y = Y_cord_from, xend = X_cord_to, yend = Y_cord_to), color="pink", alpha = 1)  + coord_cartesian(xlim = ranges2$x, ylim = ranges2$y) + labs(x = "X-coordinate (m)", y = "Y-coordinate (m)")
     })
   
   observe({
@@ -155,7 +167,22 @@ shinyServer(function(input, output, session) {
       ranges2$y <- NULL
     }
   })
-  output$table1 <- renderTable({
-    data()
+  
+  
+  output$plot3 <- renderPlot({
+    hist(data1()[[3]], breaks = (max(data1()[[3]]) - min(data1()[[3]])), main = "histogram of compartment size", xlab = "compmartment size" )
+  })
+  
+  output$plot4 <- renderPlot({
+    hist(data1()[[1]][6], main = "histogram of betweenness centrality", xlab = "betweenness centrality")
+  })
+  
+  output$plot5 <- renderPlot({
+    hist(data1()[[1]][7], main = "histogram of closeness centrality", xlab = "closeness centrality")
+  })
+
+  output$plot6 <- renderPlot({
+    hist(data1()[[1]][8], main = "histogram of degree centrality", ylab = "degree centrality")
   })
 })
+
