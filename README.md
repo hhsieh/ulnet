@@ -16,7 +16,7 @@ Users can manipulate the slider on the left side of the app page. A node table, 
 
 
 #### This_works.R
-This script alows users to produce network information and visualize networks. 
+This script allows users to produce network information and visualize networks on the desktop. 
 
 ### Product limitations and future goals
 1. Code generality! As I started from a specific project with specific datasets, the code and the app were developed to fulfill my specific research goals. Now I aim to generalize the application of the code. This is mainly about making the code generate networks for all circular and polygonal plots and the fast generations of unlimited networks of which plot margins are non-existing.
