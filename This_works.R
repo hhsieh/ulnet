@@ -1,11 +1,10 @@
-library(igraph)
 library(ggplot2)
+library(RCurl)
+library(igraph)
 library(plotly)
 
-myCsv <- read.csv("/Users/achimnyswallow/Documents/Shiny/Azteca_incidence_s06_Shiny.csv")
-
-scale <- subset(myCsv, scale_incidence == "1")
-nest <- myCsv$Tag
+myCsv <- getURL("https://docs.google.com/spreadsheets/d/181m8T_QFkUR2nuXk0fEGNcgayA-oFaU6y38TQtgpOT8/pub?output=csv")
+myCsv <- read.csv(textConnection(myCsv))
 
 nests_xy <- matrix(cbind(myCsv$Xplot,myCsv$Yplot),ncol=2)
 dist <- as.matrix(dist(nests_xy))
@@ -57,10 +56,10 @@ endDM <- function(d) {
   dfnet <- merge(df$edges, df$vertices, by.x = "edg_from", by.y = "label", all = TRUE)
   dfnet <- dfnet[complete.cases(dfnet),]
   #return(dfnet)
-  p <- ggplot(dfnet) + geom_point(aes(x=X_cord_from, y = Y_cord_from)) 
+  p <- ggplot(dfnet, xlab = "X-coordinate (m)", ylab = "Y-coordinate (m)") + geom_point(aes(x=X_cord_from, y = Y_cord_from)) 
   
   q <- p + geom_segment(data=dfnet, aes(x=dfnet$X_cord_from, y = dfnet$Y_cord_from, xend = dfnet$X_cord_to, yend = dfnet$Y_cord_to), color="pink", alpha = 0.1)
-  q
+  ggplotly(q)
 }
 
 
@@ -129,8 +128,6 @@ modiinfo <- function(d) {
   predator <- function(x) myCsv$beetle_incidence[x]
   fungus <- function(x) myCsv$fungus_incidence[x]
   tree <- function(x) myCsv$especie[x]
-  
-  
   
   node_prop <- list()
   N <- nrow(dist)
