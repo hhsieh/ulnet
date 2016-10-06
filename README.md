@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/50800648.svg)](https://zenodo.org/badge/latestdoi/50800648)
+
 # ulnet
 Generate an unlimited number of networks based on threshold distance.
 
