@@ -17,14 +17,11 @@ library(igraph)
 data <- getURL("https://docs.google.com/spreadsheets/d/181m8T_QFkUR2nuXk0fEGNcgayA-oFaU6y38TQtgpOT8/pub?output=csv")
 data <- read.csv(textConnection(data))
 
-
-
 #####################################################
 ##                                                 ##
 ##   Step 3 Generate the distance matrix of nodes  ##
 ##                                                 ##
 #####################################################
-
 nests_xy <- matrix(cbind(data$Xplot,data$Yplot),ncol=2) 
 dist <- as.matrix(dist(nests_xy))
 
