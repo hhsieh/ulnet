@@ -24,6 +24,7 @@ This script allows users to produce network information and visualize networks o
 
 ### Stay tuned!
 
-### LICENSE: This is a GNU GPLv3 licensed product
+### License 
+This is a GNU GPLv3 licensed product
 
 
