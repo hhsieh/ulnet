@@ -118,19 +118,19 @@ ntinfo <- function(d) {
   inv <- solve(I-D)
   
   # collect node properties of the network
-  identity <- function(x) data$Tag[x] #node identities
-  x_cord <- function(x) data$Xplot[x] #x-coordinates of nodes
-  y_cord <- function(x) data$Yplot[x] #y-coordinates of nodes
+  identity <- function(x) myCsv$Tag[x] #node identities
+  x_cord <- function(x) myCsv$Xplot[x] #x-coordinates of nodes
+  y_cord <- function(x) myCsv$Yplot[x] #y-coordinates of nodes
   cmtsize <- function(x) length(which(inv[,x]!=0)) #compartment sizes of nodes
   comp <- function(x) which(inv[,x]!=0)[1] #compartment identities
   g <- graph.adjacency(DM) #generate a graph
   between <- function(x) betweenness(g, directed=FALSE)[x] #betweenness centralities of nodes
   close <- function(x) closeness(g, mode = "out")[x] #closeness centralities of nodes
   degree_centrality <- function(x) length(which(DM[,x]==1)) #degree centralities of nodes
-  scale <- function(x) data$scale_incidence[x] #the presence/absence of the protection mutualism
-  predator <- function(x) data$beetle_incidence[x] #the presence/absence of predation
-  fungus <- function(x) data$fungus_incidence[x] #the presence of disease
-  tree <- function(x) data$especie[x] #tree species of concerned sites
+  scale <- function(x) myCsv$scale_incidence[x] #the presence/absence of the protection mutualism
+  predator <- function(x) myCSv$beetle_incidence[x] #the presence/absence of predation
+  fungus <- function(x) myCsv$fungus_incidence[x] #the presence of disease
+  tree <- function(x) myCsv$especie[x] #tree species of concerned sites
   
   node_prop <- list()
   N <- nrow(dist)
@@ -205,19 +205,19 @@ ntinfo_2 <- function(d, lambda) {
   inv <- solve(I-D)
   
   # collect node properties of the network
-  identity <- function(x) data$Tag[x] #node identities
-  x_cord <- function(x) data$Xplot[x] #x-coordinates of nodes
-  y_cord <- function(x) data$Yplot[x] #y-coordinates of nodes
+  identity <- function(x) myCsv$Tag[x] #node identities
+  x_cord <- function(x) myCsv$Xplot[x] #x-coordinates of nodes
+  y_cord <- function(x) myCsv$Yplot[x] #y-coordinates of nodes
   cmtsize <- function(x) length(which(inv[,x]!=0)) #compartment sizes of nodes
   comp <- function(x) which(inv[,x]!=0)[1] #compartment identities
   g <- graph.adjacency(DM) #generate a graph
   between <- function(x) betweenness(g, directed=FALSE)[x] #betweenness centralities of nodes
   close <- function(x) closeness(g, mode = "out")[x] #closeness centralities of nodes
   degree_centrality <- function(x) length(which(DM[,x]==1)) #degree centralities of nodes
-  scale <- function(x) data$scale_incidence[x] #the presence/absence of the protection mutualism
-  predator <- function(x) data$beetle_incidence[x] #the presence/absence of predation
-  fungus <- function(x) data$fungus_incidence[x] #the presence of disease
-  tree <- function(x) data$especie[x] #tree species of concerned sites
+  scale <- function(x) myCsv$scale_incidence[x] #the presence/absence of the protection mutualism
+  predator <- function(x) myCsv$beetle_incidence[x] #the presence/absence of predation
+  fungus <- function(x) myCsv$fungus_incidence[x] #the presence of disease
+  tree <- function(x) myCsv$especie[x] #tree species of concerned sites
   
   node_prop <- list()
   N <- nrow(dist)
