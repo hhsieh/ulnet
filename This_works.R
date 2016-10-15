@@ -128,7 +128,7 @@ ntinfo <- function(d) {
   close <- function(x) closeness(g, mode = "out")[x] #closeness centralities of nodes
   degree_centrality <- function(x) length(which(DM[,x]==1)) #degree centralities of nodes
   scale <- function(x) myCsv$scale_incidence[x] #the presence/absence of the protection mutualism
-  predator <- function(x) myCSv$beetle_incidence[x] #the presence/absence of predation
+  predator <- function(x) myCsv$beetle_incidence[x] #the presence/absence of predation
   fungus <- function(x) myCsv$fungus_incidence[x] #the presence of disease
   tree <- function(x) myCsv$especie[x] #tree species of concerned sites
   
