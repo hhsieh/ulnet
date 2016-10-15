@@ -162,8 +162,8 @@ ntinfo <- function(d) {
   # produce an edge table
   edg_from <- function(x) replicate(length(which(DM[,x]!=0)),x)
   edg_to <- function(x) which(DM[,x]!=0)
-  X_cord_from <- function(x) replicate(length(edg_from(x)), data$Xplot[x])
-  Y_cord_from <- function(x) replicate(length(edg_from(x)), data$Yplot[x])
+  X_cord_from <- function(x) replicate(length(edg_from(x)), myCsv$Xplot[x])
+  Y_cord_from <- function(x) replicate(length(edg_from(x)), myCsv$Yplot[x])
   X_cord_to <- function(x) myCsv$Xplot[which(DM[,x]!=0)]
   Y_cord_to <- function(x) myCsv$Yplot[which(DM[,x]!=0)]
   zz <- function(x) which(inv[,x]!=0)[1]
@@ -249,8 +249,8 @@ ntinfo_2 <- function(d, lambda) {
   # produce an edge table
   edg_from <- function(x) replicate(length(which(DM[,x]!=0)),x)
   edg_to <- function(x) which(DM[,x]!=0)
-  X_cord_from <- function(x) replicate(length(edg_from(x)), data$Xplot[x])
-  Y_cord_from <- function(x) replicate(length(edg_from(x)), data$Yplot[x])
+  X_cord_from <- function(x) replicate(length(edg_from(x)), myCsv$Xplot[x])
+  Y_cord_from <- function(x) replicate(length(edg_from(x)), myCsv$Yplot[x])
   X_cord_to <- function(x) myCsv$Xplot[which(DM[,x]!=0)]
   Y_cord_to <- function(x) myCsv$Yplot[which(DM[,x]!=0)]
   zz <- function(x) which(inv[,x]!=0)[1]
