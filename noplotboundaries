@@ -88,6 +88,6 @@ nt <- function(d) {
   cmtsize_freq <- table(compsize)
   
   compartment_size_freq <- table(cmtsize)
-  return(list(nodes = vertices, edges = edges, compartment_size_freq = cmtsize_freq))
+  return(list(nodes = vertices, edges = edges, compartment_size_freq = table(cmtsize_freq)))
   
 }
