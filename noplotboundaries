@@ -42,12 +42,11 @@ nt_exp <- function(d, lambda) {
   vertices <- data.frame(id, comp, cmtsize)
   #vertices <- data.frame(id, cmtsize)
   for_compsizefreq <- unique(vertices[,c(2,3)])
-  compsize <- for_compsizefreq$comp_size
+  compsize <- for_compsizefreq$cmtsize
   compsize_freq <- table(compsize)
     
   compartment_size_freq <- table(cmtsize)
     return(list(nodes = vertices, edges = edges, compartment_size_freq = table(for_compsizefreq)))
-  
 }
 
 
