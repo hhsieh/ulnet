@@ -43,7 +43,7 @@ nt_exp <- function(d, lambda) {
   #vertices <- data.frame(id, cmtsize)
     
   compartment_size_freq <- table(cmtsize)
-    return(list(nodes = vertices, edges = edges, compartment_size_freq = table(cmtsize)))
+    return(list(nodes = vertices, edges = edges, compartment_size_freq = table(comp)))
   
 }
 
@@ -83,6 +83,6 @@ nt <- function(d) {
   #vertices <- data.frame(id, cmtsize)
   
   compartment_size_freq <- table(cmtsize)
-  return(list(nodes = vertices, edges = edges, compartment_size_freq = table(cmtsize)))
+  return(list(nodes = vertices, edges = edges, compartment_size_freq = table(comp)))
   
 }
