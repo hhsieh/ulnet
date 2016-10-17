@@ -11,7 +11,6 @@ head(data)
 
 dist <- as.matrix(dist(data))
 recnet <- function(d) {
-    
   #based on user-defined threshold distance, d, to create an adjancency matrix of nodes
   DM <- dist[] < d
   diag(DM) = 0
@@ -23,7 +22,6 @@ recnet <- function(d) {
   inv <- solve(I-D)
   
   # collect node properties of the network
-  
   x_cord <- function(x) data$x_cord[x] #x-coordinates of nodes
   y_cord <- function(x) data$y_cord[x] #y-coordinates of nodes
   cmtsize <- function(x) length(which(inv[,x]!=0)) #compartment sizes of nodes
@@ -33,13 +31,12 @@ recnet <- function(d) {
   close <- function(x) closeness(g, mode = "out")[x] #closeness centralities of nodes
   degree_centrality <- function(x) length(which(DM[,x]==1)) #degree centralities of nodes
   
-  
   node_prop <- list()
   N <- nrow(dist)
   for (i in 1:N) {
     node_prop[[i]] = data.frame(x_cord = x_cord(i), y_cord = y_cord(i), compartment_id = comp(i), comp_size = cmtsize(i),
                                 between_ct = between(i), close_ct = close(i), degree_ct = degree_centrality(i)
-   ) 
+    ) 
   }
   nodeproperties <- do.call(rbind, node_prop)
   
@@ -81,8 +78,8 @@ recnet <- function(d) {
   filtered_edges <- filtered_edges[,c(1:6)]
   #return(filtered_edges)
   
-  networkstats <- unique(filtered_nodes[,c(4,5)])
+  networkstats <- unique(filtered_nodes[,c(3,4)])
   compsize <- networkstats$comp_size
   compsize_freq <- table(compsize)
-  return(list(nodes = filtered_nodes, edges = filtered_edges, compsize = compsize, compsize_freq = compsize_freq))
+  return(list(nodes = filtered_nodes, edges = filtered_edges, compsize = compsize, compartments_table = table(networkstats)))
 }
