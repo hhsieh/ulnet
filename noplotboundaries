@@ -35,15 +35,15 @@ nt_exp <- function(d, lambda) {
   id <- c(1:nrow(dist))
   
   tt <- function(x) length(which(inv[,x]!=0))
-  cmtsize <- sapply(1:nrow(dist), tt)
+  compartment_size <- sapply(1:nrow(dist), tt)
   zz <- function(x) which(inv[,x]!=0)[1] #this gives the first node of each compartment as a representative of the compartment label
-  comp <- sapply(1:nrow(dist), zz)
+  compartment <- sapply(1:nrow(dist), zz)
   
-  vertices <- data.frame(id, comp, cmtsize)
+  vertices <- data.frame(id, compartment, compartment_size)
   #vertices <- data.frame(id, cmtsize)
   for_compsizefreq <- unique(vertices[,c(2,3)])
-  compsize <- for_compsizefreq$cmtsize
-  compsize_freq <- table(compsize)
+  #compsize <- for_compsizefreq$cmtsize
+  #compsize_freq <- table(compsize)
     
   compartment_size_freq <- table(cmtsize)
     return(list(nodes = vertices, edges = edges, compartment_size_freq = table(for_compsizefreq)))
@@ -77,15 +77,15 @@ nt <- function(d) {
   id <- c(1:nrow(dist))
   
   tt <- function(x) length(which(inv[,x]!=0))
-  cmtsize <- sapply(1:nrow(dist), tt)
+  compartment_size <- sapply(1:nrow(dist), tt)
   zz <- function(x) which(inv[,x]!=0)[1] #this gives the first node of each compartment as a representative of the compartment label
-  comp <- sapply(1:nrow(dist), zz)
+  compartment <- sapply(1:nrow(dist), zz)
   
-  vertices <- data.frame(id, comp, cmtsize)
+  vertices <- data.frame(id, compartment, compartment_size)
   #vertices <- data.frame(id, cmtsize)
   for_compsizefreq <- unique(vertices[,c(2,3)])
-  compsize <- for_compsizefreq$cmtsize
-  cmtsize_freq <- table(compsize)
+  #compsize <- for_compsizefreq$cmtsize
+  #cmtsize_freq <- table(compsize)
   
   compartment_size_freq <- table(cmtsize)
   return(list(nodes = vertices, edges = edges, compartment_size_freq = table(for_compsizefreq)))
