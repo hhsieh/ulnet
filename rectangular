@@ -4,7 +4,7 @@ library(igraph)
 set.seed(5)
 x_cord <- rnorm(100) * 100
 y_cord <- rnorm(100) * 100
-data <- cbind(x_cord,y_cord)
+data <- data.frame(x_cord,y_cord)
 head(data)
 
 ## set the plot boundry (-240, -270), (240, -270), (-240, 270), (240, 270)
@@ -59,10 +59,10 @@ recnet <- function(d) {
   # produce an edge table
   edg_from <- function(x) replicate(length(which(DM[,x]!=0)),x)
   edg_to <- function(x) which(DM[,x]!=0)
-  X_cord_from <- function(x) replicate(length(edg_from(x)), myCsv$Xplot[x])
-  Y_cord_from <- function(x) replicate(length(edg_from(x)), myCsv$Yplot[x])
-  X_cord_to <- function(x) myCsv$Xplot[which(DM[,x]!=0)]
-  Y_cord_to <- function(x) myCsv$Yplot[which(DM[,x]!=0)]
+  X_cord_from <- function(x) replicate(length(edg_from(x)), data$x_cord[x])
+  Y_cord_from <- function(x) replicate(length(edg_from(x)), data$y_cord[x])
+  X_cord_to <- function(x) data$x_cord[which(DM[,x]!=0)]
+  Y_cord_to <- function(x) data$y_cord[which(DM[,x]!=0)]
   zz <- function(x) which(inv[,x]!=0)[1]
   comp <- sapply(1:nrow(dist), zz)
   compar <- function(x) replicate(length(which(DM[,x]!=0)), comp[x])
@@ -137,10 +137,10 @@ recnet_exp <- function(d, lambda) {
   # produce an edge table
   edg_from <- function(x) replicate(length(which(DM[,x]!=0)),x)
   edg_to <- function(x) which(DM[,x]!=0)
-  X_cord_from <- function(x) replicate(length(edg_from(x)), myCsv$Xplot[x])
-  Y_cord_from <- function(x) replicate(length(edg_from(x)), myCsv$Yplot[x])
-  X_cord_to <- function(x) myCsv$Xplot[which(DM[,x]!=0)]
-  Y_cord_to <- function(x) myCsv$Yplot[which(DM[,x]!=0)]
+  X_cord_from <- function(x) replicate(length(edg_from(x)), data$x_cord[x])
+  Y_cord_from <- function(x) replicate(length(edg_from(x)), data$y_cord[x])
+  X_cord_to <- function(x) data$x_cord[which(DM[,x]!=0)]
+  Y_cord_to <- function(x) data$y_cord[which(DM[,x]!=0)]
   zz <- function(x) which(inv[,x]!=0)[1]
   comp <- sapply(1:nrow(dist), zz)
   compar <- function(x) replicate(length(which(DM[,x]!=0)), comp[x])
