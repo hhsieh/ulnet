@@ -1,9 +1,9 @@
 library(igraph)
 
 ## without plot boundaries
-x <- rnorm(100) * 100
-y <- rnorm(100) * 100
-data <- data.frame(x,y)
+x_cord <- rnorm(100) * 100
+y_cord <- rnorm(100) * 100
+data <- data.frame(x_cord,y_cord)
 head(data)
 
 dist <- as.matrix(dist(data))
@@ -19,10 +19,10 @@ nt_exp <- function(d, lambda) {
   
   edg_from <- function(x) replicate(length(which(DM[,x]!=0)),x)
   edg_to <- function(x) which(DM[,x]!=0)
-  X_cord_from <- function(x) replicate(length(edg_from(x)), data$x[x])
-  Y_cord_from <- function(x) replicate(length(edg_from(x)), data$y[x])
-  X_cord_to <- function(x) data$x[which(DM[,x]!=0)]
-  Y_cord_to <- function(x) data$y[which(DM[,x]!=0)]
+  X_cord_from <- function(x) replicate(length(edg_from(x)), data$x_cord[x])
+  Y_cord_from <- function(x) replicate(length(edg_from(x)), data$y_cord[x])
+  X_cord_to <- function(x) data$x_cord[which(DM[,x]!=0)]
+  Y_cord_to <- function(x) data$y_cord[which(DM[,x]!=0)]
   
   edg_f <- list()
   N <- nrow(dist)
@@ -61,10 +61,10 @@ nt <- function(d) {
   
   edg_from <- function(x) replicate(length(which(DM[,x]!=0)),x)
   edg_to <- function(x) which(DM[,x]!=0)
-  X_cord_from <- function(x) replicate(length(edg_from(x)), data$x[x])
-  Y_cord_from <- function(x) replicate(length(edg_from(x)), data$y[x])
-  X_cord_to <- function(x) data$x[which(DM[,x]!=0)]
-  Y_cord_to <- function(x) data$y[which(DM[,x]!=0)]
+  X_cord_from <- function(x) replicate(length(edg_from(x)), data$x_cord[x])
+  Y_cord_from <- function(x) replicate(length(edg_from(x)), data$y_cord[x])
+  X_cord_to <- function(x) data$x_cord[which(DM[,x]!=0)]
+  Y_cord_to <- function(x) data$y_cord[which(DM[,x]!=0)]
   
   edg_f <- list()
   N <- nrow(dist)
