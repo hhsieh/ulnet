@@ -1,7 +1,7 @@
 [![DOI](https://zenodo.org/badge/50800648.svg)](https://zenodo.org/badge/latestdoi/50800648)
 
 # ulnet
-Generate an unlimited number of networks based on threshold distance.   
+Generate an unlimited number of networks based on the application of the fundamental matrix of Markov Chain.   
 
 ### Features of the product
 1. The application of the fundamental matrix of Markov Chain to generate as many networks as a user wishes based on user-defined threshold distance.
