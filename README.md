@@ -9,7 +9,7 @@ Generate an unlimited number of networks based on the application of the fundame
 3. Applied to nodes with spatial coordinates with or without spatial boundaries.
 
 #### The shiny app
-server.R and ui.R are essential for the production of the shiny app, which you can find at https://hhsieh.shinyapps.io/Ulnet/
+server.R and ui.R are essential for the production of the shiny app, which you can find at https://hhsieh.shinyapps.io/Ulnet/, which features a special case of networks in a polygon plot.
 Users can manipulate the slider on the left side of the app page. A node table, an edge table, a network plot, and summary plots providing histograms of compartment size, degree centrality, betweenness centrality and closeness centrality will appear as the user decides the threshold distance on the slider. As an ecologist, I am also concerned about other node information. This includes tree species, the occurrence of insect pathogen, and the occurrence of species interactions such as mutualism and predation. 
 
 #### This_works.R
@@ -22,7 +22,7 @@ This script includes two functions, nb and nb_exp. Both functions are applicable
 This script includes two functions, recnet and recnet_exp. Both functions are applicable to networks within rectangular plots. The former uses gemoetirc threshold distance and the latter uses negative exponential function of geometric distance to generate networks. 
 
 ### Project ongoing
-Currently working on an R package to ease the applications of the functions for a braoder set of users.
+Currently working on an R package to ease the applications of the functions for a braoder set of users and the visualization of networks in general term. 
 
 ### License 
 This is a GNU GPLv3 licensed product
