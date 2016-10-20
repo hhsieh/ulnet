@@ -4,7 +4,7 @@
 Generate an unlimited number of networks based on the application of the fundamental matrix of Markov Chain.   
 
 ### Features of the product
-1. The application of the fundamental matrix of Markov Chain to generate as many networks as a user wishes based on user-defined threshold distance.
+1. The application of the fundamental matrix of Markov Chain to generate as many networks as a user wishes based on geometric distance.
 2. Appropriate for networks with spatial information. 
 3. Applied to nodes with spatial coordinates with or without spatial boundaries.
 
