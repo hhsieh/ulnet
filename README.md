@@ -7,10 +7,9 @@ Generate an unlimited number of networks based on threshold distance.
 I began this project to fulfill my research need of generating testable networks based on spatial data. I had nodes with 2D spatial coordinates but did not know whether there was an edge between any two nodes. It's unfortunate that I failed to find available tools allowing me to generate as many networks as I wanted, as most of them did not have a spatial component.  To solve this problem, I began this coding project in which the application of the fundamental matrix of Markov Chain is the spirit.   
 
 ### Features of the product
-1. The generation of unlimited networks based on user-defined threshold distance.
+1. The application of the fundamental matrix of Markov Chain to generate as many networks as a user wishes based on user-defined threshold distance.
 2. Appropriate for networks with spatial information. 
-3. Nodes within threshold distance to any plot margin, along with nodes they share the same compartments with, are removed. This action eliminates the bias resulting from the lack of information of nodes outside the plot.
-4. The data I use in this repo was collected in a 45-hectare plot in a neotropical coffee farm. Each node is an ant nest, which has its own spatial coordinates. 
+3. Applied to nodes with spatial coordinates with or without spatial boundaries.
 
 #### The shiny app
 server.R and ui.R are essential for the production of the shiny app, which you can find at https://hhsieh.shinyapps.io/Ulnet/
@@ -18,14 +17,18 @@ Users can manipulate the slider on the left side of the app page. A node table, 
 
 
 #### This_works.R
-This script allows users to produce network information and visualize networks on the desktop. 
+This script allows users to produce network information and visualize networks on the desktop, a special case of a polygon plot is applied.
+
+#### noplotboundary.R
+This script includes two functions, nb and nb_exp. Both functions are applicable to networks with no spatial boundaries, as the former uses geometric threshold distance and the latter uses negative exponential function of geometric distance to generate networks. 
+
+#### rectangular.R
+This script includes two functions, recnet and recnet_exp. Both functions are applicable to networks within rectangular plots. The former uses gemoetirc threshold distance and the latter uses negative exponential function of geometric distance to generate networks. 
 
 ### Project ongoing
-Currently working on the generation of the code and an R package to ease the applications of the functions for a braoder set of users.
-
-### Stay tuned!
+Currently working on an R package to ease the applications of the functions for a braoder set of users.
 
 ### License 
 This is a GNU GPLv3 licensed product
 
-
+### Stay tuned!
