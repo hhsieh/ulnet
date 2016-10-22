@@ -4,7 +4,7 @@
 Generate an unlimited number of networks based on the application of the fundamental matrix of Markov Chain.   
 
 ### Features of the product
-1. The application of the fundamental matrix of Markov Chain to generate networks by user-defined threshold distances or negative exponential functions of distances. 
+1. The product applies the fundamental matrix of Markov Chain to generate networks by user-defined threshold distances or negative exponential functions of distances. 
 
 2. Flexibaly applied to spatially-coordinated nodes (networks) within or with no spatial boundaries.
 
@@ -20,6 +20,9 @@ This script includes two functions, nb and nb_exp. Both functions are applicable
 
 #### rectangular.R
 This script includes two functions, recnet and recnet_exp. Both functions are applicable to networks within rectangular plots. The former uses gemoetirc threshold distance and the latter uses negative exponential function of geometric distance to generate networks. 
+
+### References
+1. Steward, W. Probability, Markov Chains, Queues, and Simulation: The Mathematical Basis of Performance Modeling. 2009. Princeton University Press.
 
 ### License 
 This is a GNU GPLv3 licensed product
