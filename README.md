@@ -1,7 +1,7 @@
 [![DOI](https://zenodo.org/badge/50800648.svg)](https://zenodo.org/badge/latestdoi/50800648)
 
 # ulnet
-Generate an unlimited number of networks. An application of the fundamental matrix of Markov Chain to nodes with 2-D geodata (spatial coordinates).   
+Generate an unlimited number of networks with an application of the fundamental matrix of Markov Chain to nodes with 2-D geodata (spatial coordinates).   
 
 ### Features of the product
 1. The product applies the fundamental matrix of Markov Chain to generate networks by user-defined threshold distances or negative exponential functions of distances. 
