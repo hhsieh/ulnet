@@ -23,6 +23,3 @@ This script includes two functions, recnet and recnet_exp. Both functions are ap
 
 ### References
 1. Steward, W. Probability, Markov Chains, Queues, and Simulation: The Mathematical Basis of Performance Modeling. 2009. Princeton University Press.
-
-### License 
-This is a GNU GPLv3 licensed product
