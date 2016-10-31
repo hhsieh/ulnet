@@ -6,7 +6,7 @@ Generate an unlimited number of networks with an application of the fundamental 
 ### Features of the product
 1. The product applies the fundamental matrix of Markov Chain to generate networks by user-defined threshold distances or negative exponential functions of distances. 
 
-2. Flexibly applied to spatially-coordinated nodes (networks) within or with no spatial boundaries.
+2. Flexibly applied to spatially-coordinated nodes within or with no spatial boundaries.
 
 #### The shiny app
 server.R and ui.R are essential for the production of the shiny app, which you can find at https://hhsieh.shinyapps.io/Ulnet/.  It features a special case of networks in a polygon plot.
