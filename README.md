@@ -19,7 +19,7 @@ This script allows users to produce network information and visualize networks o
 This script includes two functions, nb and nb_exp. Both functions are applicable to networks with no spatial boundaries. As the former uses geometric threshold distance, the latter uses negative exponential function of geometric distance to generate networks. 
 
 #### rectangular.R
-This script includes two functions, recnet and recnet_exp. Both functions are applicable to networks within rectangular plots. The former uses gemoetirc threshold distance and the latter uses negative exponential function of geometric distance to generate networks. 
+This script includes two functions, recnet and recnet_exp. Both functions are applicable to data within rectangular plots. The former uses gemoetirc threshold distance and the latter uses negative exponential function of geometric distance to generate networks. 
 
 ### References
 1. Steward, W. Probability, Markov Chains, Queues, and Simulation: The Mathematical Basis of Performance Modeling. 2009. Princeton University Press.
